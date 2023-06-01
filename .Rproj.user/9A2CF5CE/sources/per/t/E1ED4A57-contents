@@ -1,0 +1,9 @@
+library(dplyr)
+Restaurantes <- read.csv('preparacion/restaurantes NY/trip advisor restaurants.csv')
+
+summary(Restaurantes)
+str(Restaurantes)
+table(Restaurantes$Online.Order)
+Restaurantes <- filter(Restaurantes, Online.Order %in% c('Yes', 'No'))
+
+

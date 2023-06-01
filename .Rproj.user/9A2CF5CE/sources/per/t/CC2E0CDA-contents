@@ -1,0 +1,13 @@
+#* @param Tipo Tipo de comida
+#* @param Servicio_Domicilio Dispone de servicio a domicilio
+#* @get /Restaurantes
+#* @apiTitle Restaurantes en NYU
+#* @apiDescription Filtro los restaurantes de NY segun el tipo de comida
+
+function(Tipo="", Servicio_Domicilio=""){
+  Restaurantes_NY <- Restaurantes %>%
+  filter(regexpr(tolower(Tipo), tolower(Catagory))>0) %>%
+  filter(tolower(Online.Order)==tolower(Servicio_Domicilio))
+  Restaurantes_N <- dim(Restaurantes_NY)[1]
+  list(paste0("En NY hay '", Restaurantes_N, "' restaurantes que sirven comida de tipo '", Tipo, "' que disponen de servicio a domicilio"))
+  }
