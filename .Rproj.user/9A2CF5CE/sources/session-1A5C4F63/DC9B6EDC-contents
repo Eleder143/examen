@@ -1,0 +1,48 @@
+library(httr)
+library(jsonlite)
+library(data.table)
+library(stringr)
+library(tidyverse)
+library(knitr)
+library(dplyr)
+
+#Llave necesaria para acceder a datos, se obriene en la dev-web de Riot Games
+key <- "RGAPI-c5268676-357e-446a-a83f-afeab61fbf50"
+
+
+cuentas_por_nombre <- function(x) {
+ fromJSON(rawToChar(GET(
+  url = paste0("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/", x[1], "?api_key=", key)
+ )$content))
+}
+
+lista_nombres <- list("Eleder", "Otzerin", "Grifterrr", "DosPajas", "InigossaTnaggu", "alehackss", "FakerAfligido", "IVowSheWas18")
+
+lista_info <- lapply(lista_nombres, cuentas_por_nombre)
+
+mas_maestria <- function(x, n = 3) {
+ fromJSON(rawToChar(GET(
+  url = paste0("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/", x[1], "/top?count=", n, "&api_key=", key)
+ )$content))
+}
+
+maestria <- lapply(lista_info, mas_maestria)
+
+names(maestria) <- lista_nombres
+
+campeones <- fromJSON("http://ddragon.leagueoflegends.com/cdn/11.10.1/data/en_US/championFull.json")
+
+campeones_id <- unlist(lapply(campeones[[4]], function(x){
+    a <- c()
+    a <- c(a,x[2])
+    return(unlist(a))
+}))
+
+campeones_con_id <- data.frame(nombre = names(campeones_id) %>% str_replace(".key", ""),id = campeones_id )
+
+
+top_maestria <- data.frame(persona <- maestria)
+
+count(maestria$Eleder[1])
+
+count(1)
